@@ -15,7 +15,7 @@ async function loadDoctors() {
   }
 }
 
-function createDoctorCard({ name, job, profile, years, img, alt }) {
+function createDoctorCard({ name, job, profile, fonasa, img, alt }) {
   const doctorCard = document.createElement('article');
   doctorCard.classList.add('doctor');
   doctorCard.classList.add('row');
@@ -39,12 +39,18 @@ function createDoctorCard({ name, job, profile, years, img, alt }) {
   doctorJob.classList.add('doctor__job');
   doctorJob.textContent = job;
 
+  const acceptFonasa = document.createElement('h5');
+  acceptFonasa.textContent = fonasa
+    ? 'Atiende por Fonasa e Isapre'
+    : 'Atiende solo por Isapre';
+
   const doctorProfile = document.createElement('p');
   doctorProfile.classList.add('doctor__profile');
   doctorProfile.textContent = profile;
 
   doctorInfo.appendChild(doctorName);
   doctorInfo.appendChild(doctorJob);
+  doctorInfo.appendChild(acceptFonasa);
   doctorInfo.appendChild(doctorProfile);
 
   doctorCard.appendChild(doctorImg);
@@ -54,10 +60,33 @@ function createDoctorCard({ name, job, profile, years, img, alt }) {
 }
 
 async function displayCards() {
-  const doctors = await loadDoctors();
-  if (!doctors) return;
-  const listContainer = document.getElementById('doctor_list');
-  doctors.forEach((doctor) =>
-    listContainer.appendChild(createDoctorCard(doctor))
-  );
+  try {
+    const listContainer = document.getElementById('doctor_list');
+    const fonasaCheckbox = document.getElementById('fonasaOnlyCheckbox');
+    const doctors = await loadDoctors();
+    if (!doctors) return;
+    doctors.forEach((doctor) =>
+      listContainer.appendChild(createDoctorCard(doctor))
+    );
+
+    fonasaCheckbox.addEventListener('change', (e) => {
+      if (e.currentTarget.checked) {
+        const fonasaDoctors = doctors.filter(({ fonasa }) => fonasa);
+        listContainer.innerHTML = '';
+        fonasaDoctors.forEach((doctor) =>
+          listContainer.appendChild(createDoctorCard(doctor))
+        );
+      } else {
+        listContainer.innerHTML = '';
+        doctors.forEach((doctor) =>
+          listContainer.appendChild(createDoctorCard(doctor))
+        );
+      }
+    });
+  } catch (e) {
+    const errorMsg = document.createElement('h1');
+    errorMsg.textContent = 'Hubo un error al cargar la nformación.';
+    listContainer.innerHTML = '';
+    listContainer.appendChild(errorMsg);
+  }
 }
