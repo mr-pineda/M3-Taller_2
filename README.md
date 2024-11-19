@@ -2,11 +2,13 @@
 
 ## Descripción:
 
-Propuesta de página web para el **"Hospital Top Top Top"**. Esta consta de 3 páginas:
+Propuesta de página web para el **"Hospital Top Top Top"**. En esta nueva versión se integró `JavaScript` para mejorar la interacción con el usuario y gestionar mejor la información del equipo médico. El sitio consta de 3 vistas:
 
 - **Inicio**: Muestra mensaje de bienvenida, información general y testimonio de pacientes.
-- **Equipo Medico**: Muestra información sobre el compromiso de atencion a los pacientes y sobre el equipo médico.
-- **Contacto**: Cobntiene un formulario de contacto para comunicarse con el hospital.
+- **Equipo Medico**: Muestra información sobre el compromiso de atencion a los pacientes y sobre el equipo médico. Tiene un chekbox para filtrar a los médicos que atiende por fonasa.
+- **Contacto**: Contiene un formulario de contacto para comunicarse con el hospital.
+
+En todas las pantallas Hay un boton para agendar Hora, el cual solicita datos mediante prompts.
 
 ## Instrucciones:
 
@@ -30,14 +32,49 @@ Propuesta de página web para el **"Hospital Top Top Top"**. Esta consta de 3 p�
 - En el directiorio `assets` se encuentran archivos multimedia y de estilos utilizados en el sitio.
   - `./assets/img` contiene las imágenes utilizadas en el sitio.
   - `./assets/css` contiene los archivos de estilo (Usando archivos sass).
+  - `./lib/*` Contiene librerías utilizadas (En este caso solo Bootstrap).
+  - `./scripts/` Contiene scripts de JS y archivos .json.
 
-## Notas:
+## El Event-Loop de JavaScript
 
-- Se utilizó como base la plantilla 7-1 recomendado en la página [Sass Guidelines](https://sass-guidelin.es/es/#arquitectura), sección `El Patrón 7-1` ([Enlace a plantilla](https://github.com/KittyGiraudel/sass-boilerplate)).
+JavaScript se caracterisa por ser un lenguaje asíncrono. Lo que significa que tiene la capacidad de organizar la ejecución de tareas o eventos potencialmente bloqueantes (Por ejemplo, solicitar un recurso web) en algo similar a **otra hebra de ejecución** (Se comporta similar a otra hebra, pero no es lo mismo), permitiendo que el código principal se siga ejecutando sin interrupciones. Esta capacidad asíncrona de JavaScript se debe la estructura Event-Loop.
+
+El Event Loop consta de la interacción de 3 elementos: El `CallStack`, el `TaskQueue` y el `Heap`.
+
+- **CallStack**: En Javascript las llamadas a funcion se organizan en pilas (Por lo tanto tienen un modelo de acceso tipo LIFO). En el caso de haber una serie de funciones anidadas o callbacks estas ingresan al stack desde la función más externa a la más interna y se resuelven primero desde las funciones internas a la funcion externa.
+- **Heap**: Corresponde a una gran seccion de memoria en la cual se almacenan los objetos. Este almacenamiento normalmente no tiene una estructura definida.
+- **TaskQueue**: Un motor de ejecución JavaScript maneja mensajes o tareas (procesos asíncronos) en una cola (Por lo tanto tienen un modelo de acceso tipo FIFO). Esto no es algo propio del lenguaje JavaScript, sino lo provee el motor de ejecución. En el caso del motor V8 (usado en Chrome), estos mensajes son gestionados a través las WebApis. Cuando una tarea se agrega a la cola, esta inmediatamente trata de ser resuelta por el motor de JavaScript, cuando la tarea está resuelta se añade al `CallStack` solo si este no tiene funciones en la pila y es ejecutada como cualquier otra funcion. Esto evita procesos bloqueantes, por lo que si una tarea asíncrona pudiese demorar, esta tarea no entra al Stack principal hasta estar resuelta.
+
+## Scope de JavaScript
+
+Gracias a los estándares más recientes de ECMASCRIPT se definieron las variables `let` y `const`. En los script utilizados en esta página se utiliza let para definir variables (valores que pueden ser modificados) en los prompts para ingresar datos, de manera que si un usuario ingresa mal un dato, se pueda asignar otro valor a la misma variable. `let` tiene un scope (alcance) de bloque, por lo que si se define dentro de un un bloque(zona delimitada entre par de llaves `{ }`) esta variable solo será valida detro de esas llaves.
+
+Por otra parte, se utiliza const para definir elementos una única vez, en este caso se utilizaron para definir objetos DOM. Estos se consideran constantes porque a pesar de modificar sus propiedades el objeto sigue siendo el mismo, es decir, no puedo asignar otro valor o incluso otro objeto a una constante en la cual ya se asigno un objeto. Igual que el let, `const` tiene un alcance de bloque, por lo que es válido solo dentro del bloque que es llamado.
+
+Ejemplo de alcance:
+
+```javascript
+let a = 1; //Esta es una variable global
+
+function alpha(value) {
+  // value solo existe en esta funcion
+  a = value + 10; // se puede modificar la variable global
+
+  const b = { x: 1, y: 2 }; // b es un objeto que solo existe en esta funcion
+  // b = {z: 3};  // Esta operación no está permitida (reasignar el valor de una constante)
+
+  b.x = 4; // Sí se puede modificar las propiedades de b
+  b.y = 'two'; // Las propiedades son de tipado dinámico, asi que se puede reasignar un tipo de dato diferente al original.
+
+  return a + b.x;
+}
+
+// b no existe aqui. Esta fuera del scope de la funcion.
+```
 
 ## TO-DO (Rúbrica)
 
-- [x] **Implementación de SASS y Modularización:** SASS se utiliza para modularizar correctamente los estilos, siguiendo el patrón 7-1 con variables y mixins bien implementados. Los estilos son limpios y eficientes.
-- [x] **Aplicación de la Metodología BEM:** Se aplica correctamente la metodología BEM, con una nomenclatura clara y consistente en todas las clases CSS. Cada sección del sitio sigue las convenciones BEM.
-- [ ] **Uso de Bootstrap para Componentes y Grillas:** Bootstrap está bien integrado, utilizando la grilla correctamente para la disposición de las secciones. Al menos tres componentes de Bootstrap se implementan de manera eficaz(botones, formularios, cards, etc.).
-- [ ] **Modificación de Bootstrap con SASS:** Los estilos de Bootstrap se personalizan correctamente con SASS, modificando variables de tipografía, colores espaciados. El sitio web mantiene su responsividad tras la personalización.
+- [x] **Manejo del Entorno de Ejecución y Consola:** El entorno de ejecución está correctamente configurado, y se usa console.log() de manera efectiva para mostrar mensajes y depurar el código. La estructura del programa está bien organizada y el event loop se explica claramente en el README.
+- [x] **Manejo de Variables, Operadores y Prompt:** El prompt solicita correctamente la información del usuario y los datos se muestran tanto en la consola como en una alerta. Las variables se manejan con let y const, y los operadores se utilizan adecuadamente para validar los datos ingresados. El scope de las variables se explica claramente en el README.
+- [x] **Ciclos e Iteraciones: Uso en la Interfaz:** Se implementa correctamente un ciclo que manipula el DOM dinámicamente. Los condicionales dentro del ciclo funcionan adecuadamente para mostrar elementos según los criterios establecidos(por ejemplo, filtrar doctores o servicios).
+- [ ] **Manejo de Errores con try/catch y Debugging:** Se implementa correctamente un bloque try/catch para manejar errores y el uso del debugger es adecuado. La explicación del uso de estas herramientas en el README es clara y detallada.
