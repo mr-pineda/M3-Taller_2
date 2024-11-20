@@ -72,9 +72,41 @@ function alpha(value) {
 // b no existe aqui. Esta fuera del scope de la funcion.
 ```
 
+## Manejo de Errores
+
+Se espera que el archivo doctors.json contenga un arreglo de datos de doctores con la siguiente estructura: _(Para visualizar con coloración se utilizará sintaxis de typescript)_
+
+```typescript
+type doctorList {
+    name: string; // Nombre del Doctor
+    job: string; // Trabajo o especialidad
+    profile: string; // Perfil o biografia del doctor
+    fonasa: boolean; // Indica si atiende o no por fonasa
+    img: string; // Ruta local hacia el archivo de imagen del doctor
+    alt: string; // Texto alternativo en caso de no cargar la imagen
+  }[]
+```
+
+Se podría dar el caso de que se cargara un archivo que no cumpla con la estructura esperada, por consecuencia se intente leer una propiedad inexistente, generando errores.
+
+Por ello, se utilizó un bloque `try/catch` para controlar posibles errores en la carga de datos del archivo de doctores (En el archivo [doctorLoad.js](./scripts/doctorLoad.js)), de forma que si existe algun error, independiente de la causa, se muestre un mensaje al usuario indicando que no se pudo cargar el contenido de la página.
+
+Para testear la función que carga la lista de doctores de utilizaron las herramientas de desarrollo del navegador. Se crearon breakpoints en distintos puntos de interés, siendo el más interesante de observar el punto donde se añaden médicos a la lista.
+
+```javascript
+// Codigo previo
+
+// Se agrega un nuevo doctor a la lista
+listContainer.appendChild(createDoctorCard(doctor));
+
+// Código posterior
+```
+
+Al haber un breakpoint en esta sección, se observa como se añaden doctores en la lista uno por uno, permitiendo detectar si el dato de algún doctor en concreto generá problemas.
+
 ## TO-DO (Rúbrica)
 
 - [x] **Manejo del Entorno de Ejecución y Consola:** El entorno de ejecución está correctamente configurado, y se usa console.log() de manera efectiva para mostrar mensajes y depurar el código. La estructura del programa está bien organizada y el event loop se explica claramente en el README.
 - [x] **Manejo de Variables, Operadores y Prompt:** El prompt solicita correctamente la información del usuario y los datos se muestran tanto en la consola como en una alerta. Las variables se manejan con let y const, y los operadores se utilizan adecuadamente para validar los datos ingresados. El scope de las variables se explica claramente en el README.
 - [x] **Ciclos e Iteraciones: Uso en la Interfaz:** Se implementa correctamente un ciclo que manipula el DOM dinámicamente. Los condicionales dentro del ciclo funcionan adecuadamente para mostrar elementos según los criterios establecidos(por ejemplo, filtrar doctores o servicios).
-- [ ] **Manejo de Errores con try/catch y Debugging:** Se implementa correctamente un bloque try/catch para manejar errores y el uso del debugger es adecuado. La explicación del uso de estas herramientas en el README es clara y detallada.
+- [x] **Manejo de Errores con try/catch y Debugging:** Se implementa correctamente un bloque try/catch para manejar errores y el uso del debugger es adecuado. La explicación del uso de estas herramientas en el README es clara y detallada.

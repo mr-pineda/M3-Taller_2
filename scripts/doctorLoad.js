@@ -85,7 +85,9 @@ async function displayCards() {
     });
   } catch (e) {
     const errorMsg = document.createElement('h1');
-    errorMsg.textContent = 'Hubo un error al cargar la nformación.';
+    errorMsg.textContent =
+      'Hubo un error al cargar la información del equipo médico.';
+    const listContainer = document.getElementById('doctor_list');
     listContainer.innerHTML = '';
     listContainer.appendChild(errorMsg);
   }
