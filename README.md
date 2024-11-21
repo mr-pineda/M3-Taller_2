@@ -17,7 +17,7 @@ En todas las pantallas Hay un boton para agendar Hora, el cual solicita datos me
    - **Clonar el repositorio**: Puede hacerlo con cualquier gestor de repositorios. Si tiene git instalado, puede abrir una terminal en algun diretorio y ejecutar:
 
    ```bash
-   git clone https://github.com/mr-pineda/Evaluacion_M2-Ejercicio_Practico_2
+   git clone https://github.com/mr-pineda/M3-Taller_2
    ```
 
    - Si no tiene git instalado puede presionar el botón verde `<> Code` que está en esta página y seleccionar la opción `Download ZIP`.
